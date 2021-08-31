@@ -18,8 +18,9 @@ RUN apk --no-cache add bash git php7 php7-fpm php7-opcache php7-mysqli php7-json
         php7-mbstring php7-gd php7-pdo php7-pdo_mysql php7-tokenizer nginx supervisor curl && \
     apk add --update libintl && \
     apk add --virtual build_deps gettext &&  \
-    cp /usr/bin/envsubst /usr/local/bin/envsubst && \
-    rm /etc/nginx/conf.d/default.conf
+    cp /usr/bin/envsubst /usr/local/bin/envsubst
+
+RUN rm /etc/nginx/conf.d/default.conf; exit 0
 
 # Configure nginx
 COPY config/nginx.conf /etc/nginx/nginx.conf
@@ -39,7 +40,7 @@ RUN curl -sS https://getcomposer.org/installer \
 RUN mkdir -p /var/www/html
 
 # Pull Polr
-RUN git clone https://github.com/cydrobolt/polr.git /var/www/html
+RUN git clone --depth 1 --branch 2.3.0b https://github.com/cydrobolt/polr.git /var/www/html
 
 # Make sure files/folders needed by the processes are accessable when they run under the nobody user
 RUN chown -R nobody.nobody /var/www/html && \
